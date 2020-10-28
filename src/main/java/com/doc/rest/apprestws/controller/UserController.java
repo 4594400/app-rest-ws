@@ -6,9 +6,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("users")
 public class UserController {
 
+    /**
+     * localhost:8080/users?page=5&limit=50
+     */
     @GetMapping
-    public String getUser(){
-        return "get user was called.";
+    public String getUsers(@RequestParam(value = "page", defaultValue = "1") int page,
+                           @RequestParam(value = "limit", defaultValue = "50") int limit,
+                           @RequestParam(value = "sort", defaultValue = "desc", required = false) String sort){
+        return "get user was called with page = " + page + " and limit = " + limit + " and sort = " + sort;
+    }
+
+    @GetMapping("/{userId}")
+    public String getUser(@PathVariable String userId){
+        return "get user was called with userId = " + userId;
     }
 
     @PostMapping
