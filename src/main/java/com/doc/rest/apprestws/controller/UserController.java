@@ -1,5 +1,6 @@
 package com.doc.rest.apprestws.controller;
 
+import com.doc.rest.apprestws.model.request.UserDetailsRequest;
 import com.doc.rest.apprestws.model.response.UserRest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,8 +22,8 @@ public class UserController {
     }
 
     @GetMapping(value = "/{userId}", produces = {
-                                        MediaType.APPLICATION_JSON_VALUE,
-                                        MediaType.APPLICATION_XML_VALUE
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE
     })
     public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
         UserRest returnValue = new UserRest();
@@ -33,9 +34,19 @@ public class UserController {
         return new ResponseEntity<>(returnValue, HttpStatus.OK);
     }
 
-    @PostMapping
-    public String createUser() {
-        return "create user was called";
+    @PostMapping(consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE},
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE}
+    )
+    public ResponseEntity<UserRest> createUser(@RequestBody UserDetailsRequest userDetails) {
+        UserRest returnValue = new UserRest();
+        returnValue.setFirstName(userDetails.getFirstName());
+        returnValue.setLastName(userDetails.getLastName());
+        returnValue.setEmail(userDetails.getEmail());
+        return new ResponseEntity<>(returnValue, HttpStatus.OK);
     }
 
     @PutMapping
