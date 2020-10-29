@@ -1,5 +1,6 @@
 package com.doc.rest.apprestws.controller;
 
+import com.doc.rest.apprestws.model.request.UpdateUserDetailsRequest;
 import com.doc.rest.apprestws.model.request.UserDetailsRequest;
 import com.doc.rest.apprestws.model.response.UserRest;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class UserController {
         return "get user was called with page = " + page + " and limit = " + limit + " and sort = " + sort;
     }
 
-    @GetMapping(value = "/{userId}", produces = {
+    @GetMapping(path = "/{userId}", produces = {
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE
     })
@@ -62,13 +63,26 @@ public class UserController {
         return new ResponseEntity<>(returnValue, HttpStatus.OK);
     }
 
-    @PutMapping
-    public String updateUser() {
-        return "update user was called";
+    @PutMapping(path = "/{userId}",
+            consumes = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE},
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE}
+    )
+    public UserRest updateUser(@PathVariable String userId, @Valid @RequestBody UpdateUserDetailsRequest updateUserDetails) {
+        UserRest storedUserDetails = users.get(userId);
+        storedUserDetails.setFirstName(updateUserDetails.getFirstName());
+        storedUserDetails.setLastName(updateUserDetails.getLastName());
+        users.put(userId, storedUserDetails);
+
+        return storedUserDetails;
     }
 
-    @DeleteMapping
-    public String deleteUser() {
-        return "delete user was called";
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        users.remove(id);
+        return ResponseEntity.noContent().build();
     }
 }
