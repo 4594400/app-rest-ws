@@ -33,6 +33,9 @@ public class UserController {
             MediaType.APPLICATION_XML_VALUE
     })
     public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
+        String firstName = null;
+        firstName.length();
+
         if (users.containsKey(userId)) {
             return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
         } else {
