@@ -4,20 +4,22 @@ import com.doc.rest.apprestws.exception.UserServiceException;
 import com.doc.rest.apprestws.model.request.UpdateUserDetailsRequest;
 import com.doc.rest.apprestws.model.request.UserDetailsRequest;
 import com.doc.rest.apprestws.model.response.UserRest;
+import com.doc.rest.apprestws.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.*;
-import java.util.HashMap;
+import javax.validation.Valid;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("users")
 public class UserController {
     private Map<String, UserRest> users;
+    @Autowired
+    private UserService userService;
 
     /**
      * localhost:8080/users?page=5&limit=50
@@ -34,7 +36,7 @@ public class UserController {
             MediaType.APPLICATION_XML_VALUE
     })
     public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
-        if(true){
+        if (true) {
             throw new UserServiceException("A User Service Exception is thrown");
         }
 
@@ -53,18 +55,7 @@ public class UserController {
                     MediaType.APPLICATION_XML_VALUE}
     )
     public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequest userDetails) {
-        UserRest returnValue = new UserRest();
-        returnValue.setFirstName(userDetails.getFirstName());
-        returnValue.setLastName(userDetails.getLastName());
-        returnValue.setEmail(userDetails.getEmail());
-
-        String userId = UUID.randomUUID().toString();
-        returnValue.setUserId(userId);
-
-        if (users == null) {
-            users = new HashMap<>();
-            users.put(userId, returnValue);
-        }
+        UserRest returnValue = userService.createUser(userDetails);
         return new ResponseEntity<>(returnValue, HttpStatus.OK);
     }
 
