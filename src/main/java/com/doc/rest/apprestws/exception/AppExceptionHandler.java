@@ -14,10 +14,10 @@ import java.util.Date;
 @ControllerAdvice
 public class AppExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {Exception.class})
-    public ResponseEntity<Object> handleAnyExceptions(Exception ex, WebRequest request){
+    public ResponseEntity<Object> handleAnyExceptions(Exception ex, WebRequest request) {
 
         String errorMessageDescription = ex.getLocalizedMessage();
-        if(errorMessageDescription == null) {
+        if (errorMessageDescription == null) {
             errorMessageDescription = ex.toString();
         }
         ErrorMessage errorMessage = new ErrorMessage(new Date(), errorMessageDescription);
@@ -26,10 +26,22 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {NullPointerException.class})
-    public ResponseEntity<Object> handleNullPointerException(NullPointerException ex, WebRequest request){
+    public ResponseEntity<Object> handleNullPointerException(NullPointerException ex, WebRequest request) {
 
         String errorMessageDescription = ex.getLocalizedMessage();
-        if(errorMessageDescription == null) {
+        if (errorMessageDescription == null) {
+            errorMessageDescription = ex.toString();
+        }
+        ErrorMessage errorMessage = new ErrorMessage(new Date(), errorMessageDescription);
+
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(value = {UserServiceException.class})
+    public ResponseEntity<Object> handleUserServiceException(UserServiceException ex, WebRequest request) {
+
+        String errorMessageDescription = ex.getLocalizedMessage();
+        if (errorMessageDescription == null) {
             errorMessageDescription = ex.toString();
         }
         ErrorMessage errorMessage = new ErrorMessage(new Date(), errorMessageDescription);

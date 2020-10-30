@@ -1,5 +1,6 @@
 package com.doc.rest.apprestws.controller;
 
+import com.doc.rest.apprestws.exception.UserServiceException;
 import com.doc.rest.apprestws.model.request.UpdateUserDetailsRequest;
 import com.doc.rest.apprestws.model.request.UserDetailsRequest;
 import com.doc.rest.apprestws.model.response.UserRest;
@@ -33,8 +34,9 @@ public class UserController {
             MediaType.APPLICATION_XML_VALUE
     })
     public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
-        String firstName = null;
-        firstName.length();
+        if(true){
+            throw new UserServiceException("A User Service Exception is thrown");
+        }
 
         if (users.containsKey(userId)) {
             return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
